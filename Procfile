@@ -1,1 +1,1 @@
-web: gunicorn dashAppCovid:server
+web: gunicorn app1:server
