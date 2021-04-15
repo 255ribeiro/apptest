@@ -1,0 +1,1 @@
+print("teste02_02")
