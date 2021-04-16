@@ -277,6 +277,10 @@ def mapacasos(uf, cidade):
                            opacity=0.5,
                            labels={'CA_por_cemMil_Hab':'Casos Acumulados/100Mil hab.'}
                           )
+    fig.update_layout(
+    autosize=False,
+    width=1200,
+    height=1200,)
     return fig
 
     
