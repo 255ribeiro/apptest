@@ -91,7 +91,7 @@ def update_date_dropdown(uf):
 def update_casos_mm_fig(uf, cidade):
     df2,  df1 = preproc_filter_df(uf, cidade)
     df1.sort_values('data', inplace = True)
-
+    df1['casosNovos'] = np.absolute(df1['casosNovos'])
 
     df1['media_movel_casos'] =df1.rolling(7, center=False)['casosNovos'].mean()
 
