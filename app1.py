@@ -16,8 +16,8 @@ list_dia_semana = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab']
 
 # Load file
 def load_dataset(fZipName):
-    zf = zipfile.ZipFile('./data/' + fZipName + '.zip') 
-    df = pd.read_csv(zf.open( fZipName + '.csv'), sep=';')
+    zf = zipfile.ZipFile('./data/' + fZipName  + '.zip') 
+    df = pd.read_csv(zf.open( fZipName + '*' +'.csv'), sep=';')
    
     # Prepoc datetime
     cat_dia_semana = pd.CategoricalDtype(categories= list_dia_semana , ordered=True)
@@ -28,7 +28,7 @@ def load_dataset(fZipName):
 
 ###
 
-df = load_dataset('HIST_PAINEL_COVIDBR')
+df = load_dataset('HIST_PAINEL_COVIDBR_15abr2021')
 
 
 def preproc_filter_df(estado, cidade):
