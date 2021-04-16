@@ -4,13 +4,18 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 
 import plotly.graph_objs as go
+import plotly.express as px
 
 import numpy as np
 import pandas as pd
 
-#import os
+import geopandas as gpd
+
+import json
+import os
 import zipfile
-#from tensorflow.keras.utils import get_file
+
+from tensorflow.keras.utils import get_file
 
 list_dia_semana = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab']
 
@@ -50,6 +55,76 @@ for i in df['estado'].unique():
     dictUfMuni[i] = aux_list
 
 
+#### Para mapas
+def preproc_comp_cidades(df1,estados, cidades):
+    df1.sort_values('data', inplace = True)
+    listDFs = []
+    for i in range(len(estados)):
+        # filtrando por estado
+        fltr = df1['estado'].str.lower() == estados[i].lower()
+        df_UF = df1.loc[fltr, :]
+        # filtrando pro cidade
+        fltr = df_UF['municipio'].str.lower() == cidades[i].lower()
+        df_muni = df_UF.loc[fltr, :]
+
+        ###
+        #estado
+        df_UF.dropna(subset=['municipio'])
+        # esrado por município
+        df_UF_muni = df_UF.groupby('municipio')
+         # população do estado somatório dos municípios
+        agg_estado = df_UF_muni.agg({'populacaoTCU2019': 'max', 'casosAcumulado': 'max'}).reset_index()
+        popu_estado = agg_estado['populacaoTCU2019'].sum()
+        casos_estado = agg_estado['casosAcumulado'].sum()
+        
+        df_UF_muni = df_UF_muni.agg({'populacaoTCU2019': 'max', 'casosAcumulado': 'max', 'obitosAcumulado': 'max',  }).reset_index()
+        # estado por município, valores por 100 mil habitantes
+        df_UF_muni['CA_por_cemMil_Hab'] = df_UF_muni['casosAcumulado'] * 10**5 / df_UF_muni['populacaoTCU2019']
+        df_UF_muni['OA_por_cemMil_Hab'] = df_UF_muni['obitosAcumulado'] * 10**5 / df_UF_muni['populacaoTCU2019']
+        df_UF_muni['CA_cemMil_log'] = df_UF_muni['CA_por_cemMil_Hab'].apply(lambda x: np.log10(x))
+        df_UF_muni['OA_cemMil_log'] = df_UF_muni['OA_por_cemMil_Hab'].apply(lambda x: np.log10(x))
+
+       
+        print('População: somatório dos municípios do estado {} : {} '.format(estados[i], popu_estado))
+        print('Casos: somatório dos municípios do estado {} : {} '.format(estados[i], casos_estado))
+        print('Casos por cem mil habintnates do estado {} : {} '.format(estados[i], casos_estado*10**5/popu_estado))
+
+        # totalização dos casos do estado
+        df_UF = df_UF.groupby('data')
+        df_UF = df_UF.agg({'casosNovos': sum, 'obitosNovos': sum, 'casosAcumulado': sum, 'obitosAcumulado': sum,'populacaoTCU2019': 'max'}).reset_index()
+        df_UF['CN_por_cemMil_Hab'] = df_UF['casosNovos'] * 10**5 / popu_estado
+        df_UF['ON_por_cemMil_Hab'] = df_UF['obitosNovos'] * 10**5 / popu_estado
+        df_UF['CA_por_cemMil_Hab'] = df_UF['casosAcumulado'] * 10**5 / popu_estado
+        df_UF['OA_por_cemMil_Hab'] = df_UF['obitosAcumulado'] * 10**5 / popu_estado
+
+        ## dias a partir da primeira notificação
+        dia_0 = df_UF['data'].min()
+        df_UF['dia_num'] = (df_UF['data'] - dia_0).apply(lambda x: x.days)
+        
+        ###
+        #cidades
+
+        print('população da cidade de {}: {}'.format(cidades[i], df_muni['populacaoTCU2019'].max() ))
+        df_muni['CN_por_cemMil_Hab'] = df_muni['casosNovos'] * 10**5 / df_muni['populacaoTCU2019']
+        df_muni['ON_por_cemMil_Hab'] = df_muni['obitosNovos'] * 10**5 / df_muni['populacaoTCU2019']
+        df_muni['CA_por_cemMil_Hab'] = df_muni['casosAcumulado'] * 10**5 / df_muni['populacaoTCU2019']
+        df_muni['OA_por_cemMil_Hab'] = df_muni['obitosAcumulado'] * 10**5 / df_muni['populacaoTCU2019']
+
+        # escala logarítimica
+        df_muni['CN_cemMil_log'] = df_muni['CN_por_cemMil_Hab'].apply(lambda x: np.log10(x))
+        df_muni['ON_cemMil_log'] = df_muni['ON_por_cemMil_Hab'].apply(lambda x: np.log10(x))
+        df_muni['CA_cemMil_log'] = df_muni['CA_por_cemMil_Hab'].apply(lambda x: np.log10(x))
+        df_muni['OA_cemMil_log'] = df_muni['OA_por_cemMil_Hab'].apply(lambda x: np.log10(x))
+        ## dias a partir da primeira notificação
+        dia_0 = df_muni['data'].min()
+        df_muni['dia_num'] = (df_muni['data'] - dia_0).apply(lambda x: x.days)
+
+        #lista de saida
+        listDFs.append(df_UF)
+        listDFs.append(df_UF_muni)
+        listDFs.append(df_muni)
+           
+    return listDFs
 
 app = dash.Dash()
 
@@ -70,7 +145,8 @@ app.layout = html.Div(
             style = {'align': 'left'}
             ), 
         html.Div([dcc.Graph(id='casos_mm_fig'),
-        dcc.Graph(id='obitos_mm_fig')])
+        dcc.Graph(id='obitos_mm_fig'),  dcc.Graph(id='mapa_casos')]
+       )
     
             ], style={'text-align': 'left'})
 
@@ -127,7 +203,7 @@ def update_casos_mm_fig(uf, cidade):
 
 @app.callback(
     Output('obitos_mm_fig', 'figure'),
-    [Input('uf_picker', 'value'), dash.dependencies.Input('muni_picker', 'value') ]
+    [Input('uf_picker', 'value'), Input('muni_picker', 'value') ]
 )
 def update_obitos_mm_fig(uf, cidade):
     df2,  df1 = preproc_filter_df(uf, cidade)
@@ -166,6 +242,44 @@ def update_obitos_mm_fig(uf, cidade):
     return {'data': data, 'layout': layout}
 
 
+@app.callback(
+    Output('mapa_casos', 'figure'),
+    [Input('uf_picker', 'value'), Input('muni_picker', 'value')]
+)
+def mapacasos(uf, cidade):
+    df2,  df1 = preproc_filter_df(uf, cidade)
+    url = "https://raw.githubusercontent.com/luizpedone/municipal-brazilian-geodata/master/data/"
+    fname = uf.upper() + '.json'
+    path = os.path.abspath(os.getcwd())
+    path = path + '\geojsonDL'
+    try:
+        os.mkdir(path)
+    except FileExistsError:
+        pass
+    filepath = path + '\\' + fname
+    get_file(filepath, url+fname )
+    gp_mapa= gpd.read_file( filepath, driver='GeoJSON')
+    gp_mapa = gp_mapa.to_crs({'init': 'epsg:4326'})
+    LatLon_path = path + '\\' + 'LatLon' + fname
+    gp_mapa.to_file(LatLon_path, driver = "GeoJSON",  encoding='utf8')
+    with open(LatLon_path, encoding='utf8') as geofile:
+        geojson_layer = json.load(geofile)
+    lon_map = gp_mapa.unary_union.centroid.x
+    lat_map = gp_mapa.unary_union.centroid.y
+    df_est1, df_est1_muni, df_cidade1 = preproc_comp_cidades(df, uf, cidade)
+    fig = px.choropleth_mapbox(df_est1_muni, geojson=geojson_layer, locations='municipio', featureidkey = 'properties.NOME',
+                        color='CA_por_cemMil_Hab',
+                           color_continuous_scale="ylorbr",
+                           range_color=(0, df_est1_muni['CA_por_cemMil_Hab'].max()),
+                           mapbox_style="carto-positron",
+                           zoom=4,
+                           center = {'lat': lat_map, 'lon': lon_map},
+                           opacity=0.5,
+                           labels={'CA_por_cemMil_Hab':'Casos Acumulados/100Mil hab.'}
+                          )
+    return fig
+
+    
 
 
 if __name__ == '__main__':
