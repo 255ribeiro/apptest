@@ -17,7 +17,7 @@ list_dia_semana = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab']
 # Load file
 def load_dataset(fZipName):
     zf = zipfile.ZipFile('./data/' + fZipName  + '.zip') 
-    df = pd.read_csv(zf.open( fZipName + '*' +'.csv'), sep=';')
+    df = pd.read_csv(zf.open( fZipName + '.csv'), sep=';')
    
     # Prepoc datetime
     cat_dia_semana = pd.CategoricalDtype(categories= list_dia_semana , ordered=True)
