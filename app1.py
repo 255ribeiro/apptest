@@ -266,10 +266,10 @@ def mapacasos(uf, cidade):
         geojson_layer = json.load(geofile)
     lon_map = gp_mapa.unary_union.centroid.x
     lat_map = gp_mapa.unary_union.centroid.y
-    df_est1, df_est1_muni, df_cidade1 = preproc_comp_cidades(df, uf, cidade)
+    df_est1, df_est1_muni, df_cidade1, df_est2, df_est2_muni, df_cidade2 = preproc_comp_cidades(df, [uf, uf], [cidade, cidade])
     fig = px.choropleth_mapbox(df_est1_muni, geojson=geojson_layer, locations='municipio', featureidkey = 'properties.NOME',
                         color='CA_por_cemMil_Hab',
-                           color_continuous_scale="ylorbr",
+                           color_continuous_scale='ylorbr',
                            range_color=(0, df_est1_muni['CA_por_cemMil_Hab'].max()),
                            mapbox_style="carto-positron",
                            zoom=4,
