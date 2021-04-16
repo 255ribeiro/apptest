@@ -111,7 +111,7 @@ def update_casos_mm_fig(uf, cidade):
 
     layout = go.Layout(
         width=1200, height=600,
-        title='Covid casos:' + cidade  + ' ' + str(df1['data'].max()).split(' ', 1 )[0],
+        title='Covid casos: ' + cidade  + ' ' + str(df1['data'].max()).split(' ', 1 )[0],
         yaxis=dict(
             title_text="Número de casos"
         ),
