@@ -28,7 +28,7 @@ def load_dataset(fZipName):
 
 ###
 
-df = load_dataset('HIST_PAINEL_COVIDBR_14abr2021')
+df = load_dataset('HIST_PAINEL_COVIDBR')
 
 
 def preproc_filter_df(estado, cidade):
