@@ -18,7 +18,7 @@ list_dia_semana = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab']
 def load_dataset(fZipName):
     zf = zipfile.ZipFile('./data/' + fZipName + '.zip') 
     df = pd.read_csv(zf.open( fZipName + '.csv'), sep=';')
-    df = df.sample(100000)
+   
     # Prepoc datetime
     cat_dia_semana = pd.CategoricalDtype(categories= list_dia_semana , ordered=True)
     df['data'] = pd.to_datetime(df['data'],format="%Y-%m-%d")
