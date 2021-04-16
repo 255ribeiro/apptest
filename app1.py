@@ -69,8 +69,9 @@ app.layout = html.Div(
             value = "Salvador", style={'width': '50%',  'align': 'left'})],
             style = {'align': 'left'}
             ), 
-        html.Div([dcc.Graph(id='casos_mm_fig'),
-        dcc.Graph(id='obitos_mm_fig')])
+        html.Div([dcc.Graph(id='casos_mm_fig')
+
+        ])
     
             ], style={'text-align': 'left'})
 
@@ -125,45 +126,6 @@ def update_casos_mm_fig(uf, cidade):
     return {'data': data, 'layout': layout}
 
 
-@app.callback(
-    Output('obitos_mm_fig', 'figure'),
-    [Input('uf_picker', 'value'), dash.dependencies.Input('muni_picker', 'value') ]
-)
-def update_obitos_mm_fig(uf, cidade):
-    df2,  df1 = preproc_filter_df(uf, cidade)
-    df1.sort_values('data', inplace = True)
-    df1['obitosNovos'] = np.absolute(df1['obitosNovos'])
-    df1['media_movel_obitos'] =df1.rolling(7, center= False )['obitosNovos'].mean()
-    
-    #### plotly
-    Bar_dia =[]
-    cores = ['indianred',   'greenyellow', 'yellowgreen', 'lightseagreen',  'mediumseagreen', 'seagreen',  'tomato']
-    for i in range(len(list_dia_semana)):
-        fltr = df1['dia_semana_nm'] == list_dia_semana[i]
-        df_dia = df1.loc[fltr, :]
-        Bar_dia += [go.Bar(x=df_dia['data'] , y=df_dia['obitosNovos'] , name = list_dia_semana[i] ,  marker = dict( color = cores[i]) )]
-
-
-   
-    Line_med_movel = go.Scatter(x = df1['data'], y = df1['media_movel_obitos'] , mode='lines+markers', name = 'Media móvel', line=dict( color='crimson', width=5),
-    marker = dict( size=3 , color = 'crimson' )
-    
-    )
-
-    layout = go.Layout(
-        width=1200, height=600,
-        title='Covid óbitos: ' + cidade + ' ' + str(df1['data'].max()).split(' ', 1 )[0],
-        yaxis=dict( 
-            title_text="Número de óbitos"
-        ),
-        xaxis=dict(
-            title_text="Data do registro"
-        ),
-        hovermode = "x"
-    )
-
-    data = Bar_dia + [Line_med_movel]
-    return {'data': data, 'layout': layout}
 
 
 
