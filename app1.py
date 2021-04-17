@@ -57,7 +57,7 @@ app = dash.Dash()
 app.layout = html.Div(
 
     [
-        html.H1('GRÁFICOS COVID BR', style={'text-align': 'center', 'backgroundColor':'lime'}),
+        html.H1('GRÁFICOS COVID BR', style={'text-align': 'center', 'backgroundColor': 'lightblue'}),
         html.Div([
         html.H2('Selecione estado e cidade: ', style={'text-align': 'left'}),
 
@@ -72,7 +72,7 @@ app.layout = html.Div(
         dcc.Graph(id='obitos_mm_fig')]
        )
     
-            ], style={'text-align': 'left'})
+            ], style={'text-align': 'left', 'backgroundColor':'aliceblue'})
 
 # dropdown
 @app.callback(
