@@ -52,12 +52,7 @@ for i in df['estado'].unique():
         aux_list.append(j)
     dictUfMuni[i] = aux_list
 
-
-
-
 app = dash.Dash()
-
-
 
 app.layout = html.Div(
 
@@ -79,7 +74,7 @@ app.layout = html.Div(
     
             ], style={'text-align': 'left'})
 
-
+# dropdown
 @app.callback(
     Output('muni_picker', 'options'),
     [Input('uf_picker', 'value')]
@@ -88,7 +83,7 @@ def update_date_dropdown(uf):
     return [{'label': i, 'value': i} for i in dictUfMuni[uf]]
 
 
-
+## Cases graphics
 @app.callback(
     Output('casos_mm_fig', 'figure'),
     [Input('uf_picker', 'value'), dash.dependencies.Input('muni_picker', 'value') ]
@@ -169,12 +164,6 @@ def update_obitos_mm_fig(uf, cidade):
 
     data = Bar_dia + [Line_med_movel]
     return {'data': data, 'layout': layout}
-
-
-
-
-    
-
 
 if __name__ == '__main__':
     app.run_server()
