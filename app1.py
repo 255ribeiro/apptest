@@ -13,7 +13,7 @@ import json
 import os
 import zipfile
 
-import requests
+#import requests
 
 list_dia_semana = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab']
 
