@@ -73,6 +73,7 @@ app.layout = html.Div(
        )
     
             ], style={'text-align': 'left', 'backgroundColor':'aliceblue'})
+            
 
 # dropdown
 @app.callback(
