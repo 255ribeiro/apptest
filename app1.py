@@ -62,7 +62,7 @@ app = dash.Dash()
 app.layout = html.Div(
 
     [
-        html.H1('Gráficos COVID'),
+        html.H1('Gráficos COVID', style={'text-align': 'center'}),
         html.Div([
         html.H2('Selecione estado e cidade: ', style={'text-align': 'left'}),
 
