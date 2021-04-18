@@ -67,13 +67,16 @@ app.layout = html.Div(
         dcc.Dropdown(id='muni_picker',
             value = "Salvador", style={'width': '50%',  'align': 'left'})],
             style = {'align': 'left'}
-            ), 
+            ),
+        html.Br(),
+
         html.Div([dcc.Graph(id='casos_mm_fig'),
+        html.Br(),
         dcc.Graph(id='obitos_mm_fig')]
        )
     
             ], style={'text-align': 'left', 'backgroundColor':'aliceblue'})
-            
+
 
 # dropdown
 @app.callback(
