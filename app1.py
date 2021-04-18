@@ -70,12 +70,12 @@ app.layout = html.Div(
             ),
         html.Br(),
 
-        html.Div([dcc.Graph(id='casos_mm_fig'),
+        html.Div([dcc.Graph(id='casos_mm_fig', style={'text-align': 'center'}),
         html.Br(),
-        dcc.Graph(id='obitos_mm_fig')]
+        dcc.Graph(id='obitos_mm_fig', style={'text-align': 'center'})], style={'text-align': 'center'}
        )
     
-            ], style={'text-align': 'left', 'backgroundColor':'aliceblue'})
+            ], style={'text-align': 'left', 'backgroundColor':'#F2F3F4'})
 
 
 # dropdown
