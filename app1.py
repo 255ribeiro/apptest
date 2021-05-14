@@ -18,7 +18,7 @@ import zipfile
 list_dia_semana = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab']
 
 # Load file
-def load_dataset(fZipName):
+def load_dataset(fZipName): 
     zf = zipfile.ZipFile('./data/' + fZipName  + '.zip') 
     df = pd.read_csv(zf.open( fZipName + '.csv'), sep=';')
    
