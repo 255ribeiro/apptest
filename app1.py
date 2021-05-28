@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 
 #import json
-#import os
+import os
 import zipfile
 
 #import requests
@@ -18,9 +18,21 @@ import zipfile
 list_dia_semana = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab']
 
 # Load file
-def load_dataset(fZipName): 
-    zf = zipfile.ZipFile('./data/' + fZipName  + '.zip') 
-    df = pd.read_csv(zf.open( fZipName + '.csv'), sep=';')
+def load_dataset(path):
+    files = os.listdir(path)
+    paths = [os.path.join(path, basename) for basename in files]
+    mais_novo=  max(paths, key=os.path.getctime)
+    df = pd.DataFrame()
+    #ler arquivo zip mais novo
+    thezip = zipfile.ZipFile(mais_novo) 
+    # para cada aquivo na lista de informações do atquivo mais novo...
+    for zipinfo in thezip.infolist():
+    #abrir o arquivo
+        with thezip.open(zipinfo) as thefile:
+        #Ler o csv
+            df_part = pd.read_csv(thezip.open(zipinfo), sep=';')
+            print(df_part.info())
+            df = pd.concat([df, df_part], ignore_index=True)  
    
     # Prepoc datetime
     cat_dia_semana = pd.CategoricalDtype(categories= list_dia_semana , ordered=True)
@@ -31,7 +43,7 @@ def load_dataset(fZipName):
 
 ###
 
-df = load_dataset('HIST_PAINEL_COVIDBR_16mai2021')
+df = load_dataset('./data/')
 
 
 def preproc_filter_df(estado, cidade):
