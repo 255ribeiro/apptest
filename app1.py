@@ -31,7 +31,7 @@ def load_dataset(path):
         with thezip.open(zipinfo) as thefile:
         #Ler o csv
             df_part = pd.read_csv(thezip.open(zipinfo), sep=';')
-            print(df_part.info())
+
             df = pd.concat([df, df_part], ignore_index=True)  
    
     # Prepoc datetime
@@ -65,10 +65,11 @@ for i in df['estado'].unique():
     dictUfMuni[i] = aux_list
 
 app = dash.Dash()
+app.title = 'Gráficos Covid BR por município'
 
 app.layout = html.Div(
 
-    [
+    [  
         html.H1('GRÁFICOS COVID BR', style={'text-align': 'center', 'backgroundColor':'#F2F3F4'}),
         html.Div([
         html.H2('Selecione estado e cidade: ', style={'text-align': 'left'}),
