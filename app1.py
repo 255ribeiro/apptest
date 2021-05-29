@@ -1,4 +1,4 @@
-import dash
+pipimport dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
@@ -13,6 +13,7 @@ import pandas as pd
 import os
 import zipfile
 
+from read_newest import read_newest
 #import requests
 
 list_dia_semana = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab']
