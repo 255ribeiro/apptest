@@ -13,7 +13,7 @@ import pandas as pd
 import os
 import zipfile
 
-from read_newest import read_newest
+#from read_newest import read_newest
 #import requests
 
 list_dia_semana = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab']
