@@ -9,7 +9,7 @@ def read_newest(path):
     files = os.listdir(path)
     paths = [os.path.join(path, basename) for basename in files]
     mais_novo=  max(paths, key=os.path.getctime).lower()
-    # exttensão dos arquivos
+    # exttensao dos arquivos
     file_ext = mais_novo.split('.')[-1]
     # dataframe vazio
     df = pd.DataFrame()
@@ -24,7 +24,7 @@ def read_newest(path):
         mais_novo = newfile
 
     comp_file = zipfile.ZipFile(mais_novo) 
-    # para cada aquivo na lista de informações do atquivo mais novo...
+    # para cada aquivo na lista de informacoes do atquivo mais novo...
 
     for file_info in comp_file.infolist():
     #abrir o arquivo
