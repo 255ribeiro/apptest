@@ -15,7 +15,6 @@ def open_newest(path):
         with thezip.open(zipinfo) as thefile:
         #Ler o csv
             df_part = pd.read_csv(thezip.open(zipinfo), sep=';')
-            print(df_part.info())
             df = pd.concat([df, df_part], ignore_index=True)
     return df
         

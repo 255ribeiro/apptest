@@ -32,7 +32,7 @@ def load_dataset(path):
         #Ler o csv
             df_part = pd.read_csv(thezip.open(zipinfo), sep=';')
 
-            df = pd.concat([df, df_part], ignore_index=True)  
+            df = pd.concat([df, df_part])  
    
     # Prepoc datetime
     cat_dia_semana = pd.CategoricalDtype(categories= list_dia_semana , ordered=True)
