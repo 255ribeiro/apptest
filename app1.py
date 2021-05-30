@@ -13,38 +13,12 @@ import pandas as pd
 import os
 import zipfile
 
-#from read_newest import read_newest
+from read_newest import Read_newest
 #import requests
 
 list_dia_semana = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab']
 
-# Load file
-def load_dataset(path):
-    files = os.listdir(path)
-    paths = [os.path.join(path, basename) for basename in files]
-    newest_file=  max(paths, key=os.path.getctime)
-    df = pd.DataFrame()
-    #ler arquivo zip mais novo
-    thezip = zipfile.ZipFile(newest_file) 
-    # para cada aquivo na lista de informações do atquivo mais novo...
-    for zipinfo in thezip.infolist():
-    #abrir o arquivo
-        with thezip.open(zipinfo) as thefile:
-        #Ler o csv
-            df_part = pd.read_csv(thezip.open(zipinfo), sep=';')
-
-            df = pd.concat([df, df_part])  
-   
-    # Prepoc datetime
-    cat_dia_semana = pd.CategoricalDtype(categories= list_dia_semana , ordered=True)
-    df['data'] = pd.to_datetime(df['data'],format="%Y-%m-%d")
-    df['dia_semana'] = df['data'].dt.dayofweek
-    df['dia_semana_nm'] = df['dia_semana'].replace({0:'seg', 1: 'ter', 2:'qua', 3:'qui', 4:'sex', 5:'sab', 6:'dom'}).astype(cat_dia_semana)
-    return df
-
-###
-
-df = load_dataset('./data/')
+df = Read_newest('./data/')
 
 
 def preproc_filter_df(estado, cidade):

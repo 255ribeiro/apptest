@@ -3,8 +3,9 @@ import zipfile
 import pandas as pd
 import patoolib
 
+list_dia_semana = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab']
 
-def read_newest(path):
+def Read_newest(path):
 
     files = os.listdir(path)
     paths = [os.path.join(path, basename) for basename in files]
@@ -34,11 +35,19 @@ def read_newest(path):
         #Ler o csv
             df_part = pd.read_csv(comp_internal_file, sep=';')
             df = pd.concat([df, df_part], ignore_index=True)
+            
+    # Prepoc datetime
+    cat_dia_semana = pd.CategoricalDtype(categories= list_dia_semana , ordered=True)
+    df['data'] = pd.to_datetime(df['data'],format="%Y-%m-%d")
+    df['dia_semana'] = df['data'].dt.dayofweek
+    df['dia_semana_nm'] = df['dia_semana'].replace({0:'seg', 1: 'ter', 2:'qua', 3:'qui', 4:'sex', 5:'sab', 6:'dom'}).astype(cat_dia_semana)
 
     return df
  
-df = read_newest('./data/')
 
-print(df.info())
+if __name__ == '__main__':
+    df = Read_newest('./data/')
+
+    print(df.info())
 
 
