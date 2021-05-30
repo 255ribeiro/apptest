@@ -16,7 +16,6 @@ def Read_newest(path):
     file_ext = newest_file.split('.')[-1]
     # dataframe vazio
     df = pd.DataFrame()
-    print('--->', os.path.basename( newest_file))
 
     # caso arquivo rar 
     if file_ext.lower() in ['rar']:
@@ -47,7 +46,6 @@ def Read_newest(path):
 
 if __name__ == '__main__':
     df = Read_newest('./data/')
-
     print(df.info())
 
 
