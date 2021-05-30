@@ -1,3 +1,13 @@
+import os
+import zipfile
+
+import patoolib
+#import json
+#import requests
+
+import numpy as np
+import pandas as pd
+
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -5,15 +15,9 @@ from dash.dependencies import Input, Output
 
 import plotly.graph_objs as go
 
-import numpy as np
-import pandas as pd
 
-#import json
-import os
-import zipfile
 
-import patoolib
-#import requests
+
 
 list_dia_semana = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab']
 
