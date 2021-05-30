@@ -8,22 +8,22 @@ def read_newest(path):
 
     files = os.listdir(path)
     paths = [os.path.join(path, basename) for basename in files]
-    mais_novo=  max(paths, key=os.path.getctime).lower()
+    newest_file =  max(paths, key=os.path.getctime)
     # exttensao dos arquivos
-    file_ext = mais_novo.split('.')[-1]
+    file_ext = newest_file.split('.')[-1]
     # dataframe vazio
     df = pd.DataFrame()
-    print('--->', os.path.basename( mais_novo))
+    print('--->', os.path.basename( newest_file))
 
     # caso arquivo rar 
-    if file_ext in ['rar']:
-        ext_old = len(os.path.basename( mais_novo).split('.')[-1])
-        newfile = path + os.path.basename( mais_novo)[:-(ext_old)] + ".zip"
-        print('newfile', newfile)
-        patoolib.repack_archive(mais_novo, newfile )
-        mais_novo = newfile
+    if file_ext.lower() in ['rar']:
+        ext_old = len(os.path.basename( newest_file).split('.')[-1])
+        new_file = path + os.path.basename( newest_file)[:-(ext_old)] + "zip"
+        patoolib.repack_archive(newest_file, new_file )
+        os.remove(newest_file)
+        newest_file = new_file
 
-    comp_file = zipfile.ZipFile(mais_novo) 
+    comp_file = zipfile.ZipFile(newest_file) 
     # para cada aquivo na lista de informacoes do atquivo mais novo...
 
     for file_info in comp_file.infolist():

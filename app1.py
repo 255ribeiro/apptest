@@ -22,10 +22,10 @@ list_dia_semana = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab']
 def load_dataset(path):
     files = os.listdir(path)
     paths = [os.path.join(path, basename) for basename in files]
-    mais_novo=  max(paths, key=os.path.getctime)
+    newest_file=  max(paths, key=os.path.getctime)
     df = pd.DataFrame()
     #ler arquivo zip mais novo
-    thezip = zipfile.ZipFile(mais_novo) 
+    thezip = zipfile.ZipFile(newest_file) 
     # para cada aquivo na lista de informações do atquivo mais novo...
     for zipinfo in thezip.infolist():
     #abrir o arquivo
