@@ -1,5 +1,5 @@
 
-# Criação de webapp
+# Criação de webapp com o framework dash 
 
 Intruções para criação de um webapp
 
@@ -71,15 +71,30 @@ Intruções para criação de um webapp
 
     ```
 
-3. criar ambiente virtual no pythonanywhere:
+1. criar ambiente virtual no pythonanywhere:
    
     ```
     mkvirtualenv env --python='/usr/bin/python3.8'
 
     ```
-4. Instalar pacotes via pip e arquivo requirements.txt:
+1. Instalar pacotes via pip e arquivo requirements.txt:
    
-    ```
+    ```shell
     pip install -r requirements.txt
     
+    ```
+
+1. Conteúdo do arquivo  WSGI para dash_app
+
+    ```python
+
+    import sys
+
+    project_home = '/home/user_foo/appfolder_bar'
+    if project_home not in sys.path:
+        sys.path = [project_home] + sys.path
+
+    from appfile_baz import app
+    application = app.server
+
     ```
