@@ -7,7 +7,7 @@ Intruções para criação de um webapp
 
 1. Use alguma ferramenta para criação de ambientes virtuais no python. caso não possua nenhuma instale:
 
-    * exemplo: virtualenv
+    * pode-se utilizar o virtualenv. caso ainda não esteja instalado:
 
         ```
 
