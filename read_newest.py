@@ -8,7 +8,9 @@ def read_newest(path):
 
     files = os.listdir(path)
     paths = [os.path.join(path, basename) for basename in files]
-    newest_file =  max(paths, key=os.path.getctime)
+    paths = sorted(paths, key=os.path.getctime)
+    newest_file = paths[-1]
+    [os.remove(i) for i in paths[:-1]]
     # exttensao dos arquivos
     file_ext = newest_file.split('.')[-1]
     # dataframe vazio
