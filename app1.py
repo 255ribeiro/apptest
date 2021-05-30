@@ -1,7 +1,7 @@
 import os
 import zipfile
 
-import patoolib
+#import patoolib
 #import json
 #import requests
 
@@ -16,11 +16,6 @@ from dash.dependencies import Input, Output
 import plotly.graph_objs as go
 
 
-
-
-
-list_dia_semana = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab']
-
 def Read_newest(path):
 
     files = os.listdir(path)
@@ -32,14 +27,6 @@ def Read_newest(path):
     file_ext = newest_file.split('.')[-1]
     # dataframe vazio
     df = pd.DataFrame()
-
-    # caso arquivo rar 
-    if file_ext.lower() in ['rar']:
-        ext_old = len(os.path.basename( newest_file).split('.')[-1])
-        new_file = path + os.path.basename( newest_file)[:-(ext_old)] + "zip"
-        patoolib.repack_archive(newest_file, new_file )
-        os.remove(newest_file)
-        newest_file = new_file
 
     comp_file = zipfile.ZipFile(newest_file) 
     # para cada aquivo na lista de informacoes do atquivo mais novo...
@@ -58,6 +45,9 @@ def Read_newest(path):
     df['dia_semana_nm'] = df['dia_semana'].replace({0:'seg', 1: 'ter', 2:'qua', 3:'qui', 4:'sex', 5:'sab', 6:'dom'}).astype(cat_dia_semana)
 
     return df
+
+list_dia_semana = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab']
+
 
 df = Read_newest('./data/')
 
