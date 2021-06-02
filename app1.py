@@ -83,7 +83,7 @@ def update_date_dropdown(uf):
     [Input('uf_picker', 'value'), dash.dependencies.Input('muni_picker', 'value') ]
 )
 def update_casos_mm_fig(uf, cidade):
-    df2,  df1 = preproc_filter_df(uf, cidade)
+    df1 = preproc_filter_df(uf, cidade)[1]
     df1.sort_values('data', inplace = True)
     df1['casosNovos'] = np.absolute(df1['casosNovos'])
 
@@ -124,7 +124,7 @@ def update_casos_mm_fig(uf, cidade):
     [Input('uf_picker', 'value'), Input('muni_picker', 'value') ]
 )
 def update_obitos_mm_fig(uf, cidade):
-    df2,  df1 = preproc_filter_df(uf, cidade)
+    df1 = preproc_filter_df(uf, cidade)[1]
     df1.sort_values('data', inplace = True)
     df1['obitosNovos'] = np.absolute(df1['obitosNovos'])
     df1['media_movel_obitos'] =df1.rolling(7, center= False )['obitosNovos'].mean()
